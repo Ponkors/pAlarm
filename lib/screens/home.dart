@@ -1,7 +1,7 @@
-import 'package:dotted_border/dotted_border.dart';
+import 'package:digital_alarm_clock_design/screens/custom_time_picker.dart';
 import 'package:flutter/material.dart';
-
-import 'custom_time_picker.dart';
+import 'dart:async';
+import 'package:dotted_border/dotted_border.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +11,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Timer _timer;
+  String _currentTime = _getFormattedTime();
+
+  static String _getFormattedTime() {
+    final now = DateTime.now();
+    return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _currentTime = _getFormattedTime();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,25 +61,21 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       children: [
                         SizedBox(height: 60),
                         Text(
-                          "09:42",
+                          _currentTime,
                           style: TextStyle(
                               fontSize: 150,
-                              color: Color(
-                                0xffa8c889,
-                              ),
+                              color: Color(0xffa8c889),
                               height: 0),
                         ),
                         Text(
                           "THE NEXT ALARM CLOCK IN 19 MIN",
                           style: TextStyle(
                             fontSize: 24,
-                            color: Color(
-                              0xff69745F,
-                            ),
+                            color: Color(0xff69745F),
                           ),
                         ),
                       ],
@@ -74,14 +95,14 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
                   .map((day) => Text(
-                        day,
-                        style: TextStyle(
-                            fontSize: 22,
-                            color: DateTime.now().weekday ==
-                                    ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].indexOf(day) + 1
-                                ? Colors.black
-                                : const Color(0xff59644c)),
-                      ))
+                day,
+                style: TextStyle(
+                    fontSize: 22,
+                    color: DateTime.now().weekday ==
+                        ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].indexOf(day) + 1
+                        ? Colors.black
+                        : const Color(0xff59644c)),
+              ))
                   .toList(),
             ),
             const SizedBox(height: 18),
@@ -92,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: List.generate(
                     3,
-                    (index) => Padding(
+                        (index) => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: DottedBorder(
                         color: Colors.grey,
