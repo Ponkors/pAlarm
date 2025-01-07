@@ -1,4 +1,6 @@
+import 'package:digital_alarm_clock_design/blocs/time/time_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomTimePicker extends StatefulWidget {
   final void Function(int hour, int minute)? onTimeSelected;
@@ -47,7 +49,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                       width: 200,
                       height: 65,
                       decoration:
-                          BoxDecoration(color: const Color(0xff36402b), borderRadius: BorderRadius.circular(10)),
+                      BoxDecoration(color: const Color(0xff36402b), borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                   //    Time Weels
@@ -63,7 +65,6 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                             setState(() {
                               selectedHour = value;
                             });
-                            widget.onTimeSelected?.call(selectedHour, selectedMinute);
                           },
                         ),
                         const Padding(
@@ -80,7 +81,6 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                             setState(() {
                               selectedMinute = value;
                             });
-                            widget.onTimeSelected?.call(selectedHour, selectedMinute);
                           },
                         )
                       ],
@@ -123,7 +123,16 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<TimeBloc>().add(
+                      SetAlarmTimeEvent(
+                        hour: selectedHour,
+                        minute: selectedMinute,
+                        repeatDays: ['Mon', 'Wed', 'Fri'],
+                      ),
+                    );
+                    Navigator.pop(context);
+                  },
                   icon: const Icon(
                     Icons.check,
                     color: Colors.black,
