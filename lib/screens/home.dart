@@ -173,12 +173,12 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      context.read<TimeBloc>().add(RemoveAlarmTimeEvent(index));
+                                      context.read<TimeBloc>().add(RemoveAlarmTimeEvent(alarm.key));
                                     },
                                     icon: const Icon(
                                       Icons.delete,
                                       size: 30,
-                                      color: Colors.red,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ],
